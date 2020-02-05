@@ -1,0 +1,49 @@
+ * {
+    box-sizing: border-box;
+}
+
+.product {
+    height: 140px;
+    background-color: white;
+    padding: 10px 10px 10px 0;
+    border-bottom: 1px dotted #BBB;
+}
+
+.product-image {
+    float: left;
+}
+
+.product-image img{
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+}
+
+.product-info {
+    height: 100%;
+}
+
+.product-info *{
+    margin: 0;
+    padding: 0;
+    color: #555;
+}
+
+.product-info h3 {
+    font-size: large;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-info i {
+    font-size: small;
+}
+
+.product-info p {
+    padding-top: 15px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;  
+}

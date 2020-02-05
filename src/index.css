@@ -5,4 +5,17 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #d6e0ff;
+}
+
+#root {
+  padding: 15px;
+  width: 60%;
+  margin: auto;
+}
+
+@media only screen and (max-width: 1280px) {
+  #root {
+    width: 100%;
+  }
 }
