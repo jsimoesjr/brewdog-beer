@@ -1,13 +1,15 @@
 import React from "react";
+import Button from "./Button";
 
 function IngredientListItem(props) {
-    const {name, amount} = props.data,
-        {value, unit} = amount;
+    const {name, amount, temp, duration} = props.data,
+        {value, unit} = amount || temp || {};
         
     return (
         <div>
             <b>{name}</b>
-            <p>{`${value} ${unit}`}</p>
+            <p style={{display:(!value || !unit) && 'none'}}>{`${value} ${unit}`}</p>
+            <Button duration={duration} />
         </div>
     );
 }

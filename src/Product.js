@@ -1,15 +1,14 @@
 import React from "react";
-import './Product.css';
 
 function Product(props) {
    const {name, description, image_url, abv} = props;
 
    return (
-      <div className='product'>
-         <div className='product-image'>
-            <img src={image_url} alt={name} />
+      <div>
+         <div>
+            <img height={80} src={image_url} alt={name} />
          </div>
-         <div className='product-info'>
+         <div>
             <h3>{name}</h3>
             <i>ABV: {abv}</i>
             <p>{description}</p>
