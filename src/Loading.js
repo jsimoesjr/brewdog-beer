@@ -1,10 +1,11 @@
 import React from 'react';
+import img from './resources/loading.gif'
 
-function Loading () {
+function Loading(props) {
     return (
-        <>
-            <h1>Loading...</h1>
-        </>
+        <div className='loading' >
+            <img src={img} alt='Loading...' />
+        </div>
     )
 }
 

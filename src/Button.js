@@ -2,79 +2,99 @@ import React from 'react';
 
 class Button extends React.Component {
     state = {
-        status: 'IDLE', 
+        status: this.props.status.IDLE,
         countDown: this.props.duration
     }
 
     static defaultProps = {
-        duration: 0
+        duration: 0,
+        status: {
+            'IDLE': 'idle',
+            'RUNNING': 'running',
+            'PAUSED': 'paused',
+            'DONE': 'done'
+        }
     }
 
     interval = undefined
 
+    // Function to update the component status
     changeStatus = status => {
-        this.setState(() => ({status: status}));
+        this.setState(() => ({ status: status }));
     }
 
+    // Function to update countdown
     changeCountDown = value => {
-        this.setState({countDown: value});
+        this.setState({ countDown: value });
     }
 
+    // Function to decrement countdown 
     decrement = () => {
         this.changeCountDown(this.state.countDown - 1);
     }
 
-    reset = () => {
-        this.changeCountDown(this.props.duration);
-    }
-
+    // Function to start countdown
     run = () => {
         let me = this;
 
-        this.interval = setInterval(function(){
+        // Calls decrement every 1 second
+        // If the duration is actually in minutes the second parameter should be 60000
+        this.interval = setInterval(function () {
             me.decrement();
 
-            if(me.state.countDown === 0) {
+            // Stops countdown once it reaches 0 and update component status
+            if (me.state.countDown === 0) {
                 clearInterval(me.interval);
-                me.changeStatus('DONE')
-            } 
+                me.changeStatus(me.props.status.DONE)
+            }
         }, 1000);
     }
 
+    // Function to pause the countdown
     pause = () => {
         clearInterval(this.interval);
-        this.changeStatus('PAUSED')
+        this.changeStatus(this.props.status.PAUSED)
     }
 
     handleClick = () => {
-        const {status} = this.state;       
+        const { status } = this.state;
 
-        let nextStatus;
-        if(this.props.duration) {
-            if(status === 'RUNNING') {
-                nextStatus = 'PAUSED';
+        // Not allowing changing from DONE
+        if (status === this.props.status.DONE) {
+            return;
+        }
+
+        // Verifies whether it has add property if also checks if previous ingredients have beem marked done
+        if (this.props.add && this.props.checkPreviousItems(this.props.id)) {
+            alert('Please add previous ingredients.')
+            return;
+        }
+
+        // Assumes the butoon is going to change to done...
+        let nextStatus = this.props.status.DONE;
+
+        // But if has a duration...
+        if (this.props.duration) {
+            // If it's running will change to paused...
+            if (status === this.props.status.RUNNING) {
+                nextStatus = this.props.status.PAUSED;
+                // and countdown is also paused
                 this.pause();
-            } else if(status === 'DONE') {
-                nextStatus = 'IDLE';
-                this.reset();
+            // Otherwise it changes to running and starts countdown
             } else {
-                nextStatus = 'RUNNING';
+                nextStatus = this.props.status.RUNNING;
                 this.run();
-            } 
-        } else {
-            nextStatus = (status === 'IDLE') ? 'DONE' : 'IDLE';
+            }
         }
 
         this.changeStatus(nextStatus);
     }
 
     render() {
-
-        
         return (
             <div>
-                <p style={{display:(this.state.status !== 'RUNNING' && this.state.status !== 'PAUSED') && 'none'}}>{this.state.countDown}</p>
-                <button onClick={this.handleClick}>{this.state.status}</button>
+                <button className={this.state.status} onClick={this.handleClick}>{this.state.status.toUpperCase()}</button>
+                <p className='countdown' align='right' style={{ visibility: (this.state.status === this.props.status.RUNNING || this.state.status === this.props.status.PAUSED) ? 'visible' : 'hidden' }}>{this.state.countDown}</p>
             </div>
         );
     }

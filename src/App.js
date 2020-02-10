@@ -1,22 +1,39 @@
 import React from 'react';
-import DataProvider from './DataProvider';
-import ProductSwitcher from './ProductSwitcher';
-import Loading from './Loading';
+import { Switch, Route } from 'react-router-dom';
 
-function App() {
-   return (
-      <DataProvider url='https://api.punkapi.com/v2/beers?page=1&per_page=20'>
-         {({loading, data}) => {
-            return (
-               loading
-                  ? <Loading />
-                  : <ProductSwitcher data={data} />
-            )
-         }}
-      </DataProvider>
-   );
+import { util } from './global/Util';
+
+import Loading from './Loading';
+import BeerGrid from './BeerGrid';
+import BeerDetail from './BeerDetail';
+
+class App extends React.Component {
+    state = {
+        loading: false,
+        data: []
+    }
+
+    componentDidMount() {
+        this.setState({ loading: true });
+        fetch(util.getURL())
+            .then(response => response.json())
+            .then(data => this.setState({ loading: false, data: data }));
+    }
+
+    render() {
+        return (
+            this.state.loading
+                ? <div><Loading loading={this.state.loading} /></div>
+                : <div>
+                    <Switch>
+                        <Route exact path='/'>
+                            <BeerGrid data={this.state.data} />
+                        </Route>
+                        <Route path='/beers/:beerId' component={BeerDetail} />
+                    </Switch>
+                </div>
+        );
+    }
 }
 
 export default App;
-
-// ?page=1&per_page=20'>
